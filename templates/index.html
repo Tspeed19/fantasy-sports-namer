@@ -13,13 +13,6 @@
       --card-bg: #1f1f1f;
       --input-bg: #333333;
     }
-    body.light-mode {
-      --bg-color: #ffffff;
-      --text-color: #000000;
-      --accent-color: #fbbf24;
-      --card-bg: #f2f2f2;
-      --input-bg: #dddddd;
-    }
     body {
       margin: 0;
       background: var(--bg-color);
@@ -111,25 +104,6 @@
     .tab.active {
       background: #f59e0b;
     }
-    .toggle {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 20px;
-    }
-    .toggle button {
-      background: none;
-      border: 2px solid var(--accent-color);
-      color: var(--accent-color);
-      padding: 8px 16px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: bold;
-      transition: background 0.3s, color 0.3s;
-    }
-    .toggle button:hover {
-      background: var(--accent-color);
-      color: #000;
-    }
     @media (max-width: 480px) {
       h1 {
         font-size: 1.5rem;
@@ -151,10 +125,6 @@
       <div class="tab" data-sport="Baseball">Baseball</div>
       <div class="tab" data-sport="Basketball">Basketball</div>
       <div class="tab" data-sport="Other">Other</div>
-    </div>
-
-    <div class="toggle">
-      <button id="toggleMode">Toggle Dark/Light</button>
     </div>
 
     <h1 id="pageTitle">Fantasy Football Name Generator</h1>
@@ -180,13 +150,16 @@
         document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
         tab.classList.add("active");
         selectedSport = tab.dataset.sport;
-        document.getElementById("pageTitle").textContent =
-          `Fantasy ${selectedSport} Name Generator`;
-      });
-    });
 
-    document.getElementById("toggleMode").addEventListener("click", () => {
-      document.body.classList.toggle("light-mode");
+        // Title logic:
+        if (selectedSport === "Other") {
+          document.getElementById("pageTitle").textContent =
+            "Fantasy Sports Name Generator";
+        } else {
+          document.getElementById("pageTitle").textContent =
+            `Fantasy ${selectedSport} Name Generator`;
+        }
+      });
     });
 
     document.getElementById("nameForm").addEventListener("submit", function(e) {
