@@ -32,8 +32,14 @@ def index():
         response = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[
-                {"role": "system", "content": "You are a creative assistant who generates funny fantasy football team names."},
-                {"role": "user", "content": prompt_text}
+                {
+                    "role": "system",
+                    "content": "You are a creative assistant who generates funny fantasy football team names."
+                },
+                {
+                    "role": "user",
+                    "content": prompt_text
+                }
             ],
             temperature=1.2,
             max_tokens=50
@@ -43,6 +49,47 @@ def index():
 
     return render_template("index.html", team_name=team_name)
 
-# ✅ THIS IS THE MISSING PART
+# ✅ ✅ ✅ ADD THIS ROUTE BELOW:
+@app.route("/generate")
+def generate():
+    user_input = request.args.get("text", "")
+    sport = request.args.get("sport", "")
+
+    prompt_text = f"""
+    You are a witty and creative sports humor writer.
+
+    Generate exactly 1 unique, funny fantasy {sport.lower() if sport != "Other" else "sports"} team name based on the name: "{user_input}"
+
+    Rules:
+    - The name must include or play on words from "{user_input}"
+    - Make it clever, humorous, and safe for work
+    - Use creative puns, cultural references, or wordplay
+    - Avoid generic sports phrases like "Champions", "Winners", "Squad"
+    - Max 4 words
+    - It should sound like a real fantasy {sport.lower() if sport != "Other" else "sports"} team name
+
+    Return only the team name and nothing else.
+    """
+
+    response = client.chat.completions.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {
+                "role": "system",
+                "content": "You are a creative assistant who generates funny fantasy sports team names."
+            },
+            {
+                "role": "user",
+                "content": prompt_text
+            }
+        ],
+        temperature=1.2,
+        max_tokens=50
+    )
+
+    team_name = response.choices[0].message.content.strip()
+    return team_name
+
+
 if __name__ == "__main__":
     app.run(debug=True)
