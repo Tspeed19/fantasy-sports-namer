@@ -3,26 +3,40 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Fantasy Sports Generator</title>
+  <title>Fantasy Sports Name Generator</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
   <style>
+    :root {
+      --bg-color: #000000;
+      --text-color: #ffffff;
+      --accent-color: #fbbf24;
+      --card-bg: #1f1f1f;
+      --input-bg: #333333;
+    }
+    body.light-mode {
+      --bg-color: #ffffff;
+      --text-color: #000000;
+      --accent-color: #fbbf24;
+      --card-bg: #f2f2f2;
+      --input-bg: #dddddd;
+    }
     body {
       margin: 0;
+      background: var(--bg-color);
       font-family: 'Roboto', sans-serif;
-      background: linear-gradient(to bottom right, #1e3a8a, #10b981);
-      color: #ffffff;
-      min-height: 100vh;
+      color: var(--text-color);
       display: flex;
       justify-content: center;
-      align-items: center;
+      align-items: flex-start;
+      min-height: 100vh;
       padding: 20px;
       box-sizing: border-box;
     }
     .container {
-      background: rgba(0, 0, 0, 0.6);
+      background: var(--card-bg);
       padding: 30px 20px;
       border-radius: 15px;
-      max-width: 420px;
+      max-width: 500px;
       width: 100%;
       box-shadow: 0 4px 12px rgba(0,0,0,0.4);
       text-align: center;
@@ -30,20 +44,25 @@
     h1 {
       font-size: 2rem;
       margin-bottom: 20px;
-      color: #fbbf24;
+      color: var(--accent-color);
     }
     input[type="text"] {
       width: 100%;
-      padding: 15px;
+      padding: 14px;
       font-size: 1rem;
       margin-bottom: 20px;
+      background: var(--input-bg);
+      color: var(--text-color);
       border: none;
       border-radius: 8px;
       box-sizing: border-box;
     }
+    input::placeholder {
+      color: #999999;
+    }
     button {
       width: 100%;
-      background: #fbbf24;
+      background: var(--accent-color);
       color: #000;
       font-weight: bold;
       padding: 14px;
@@ -60,7 +79,7 @@
       margin-top: 25px;
       font-weight: bold;
       font-size: 1.4rem;
-      color: #34d399;
+      color: var(--accent-color);
       word-wrap: break-word;
     }
     .ad-banner {
@@ -68,9 +87,48 @@
       padding: 15px;
       background: rgba(255, 255, 255, 0.15);
       border-radius: 10px;
-      color: #ffffff;
+      color: var(--text-color);
       font-size: 0.95rem;
       opacity: 0.8;
+    }
+    .tabs {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .tab {
+      background: var(--accent-color);
+      color: #000;
+      padding: 10px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 0.95rem;
+      transition: background 0.3s;
+    }
+    .tab.active {
+      background: #f59e0b;
+    }
+    .toggle {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .toggle button {
+      background: none;
+      border: 2px solid var(--accent-color);
+      color: var(--accent-color);
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.3s, color 0.3s;
+    }
+    .toggle button:hover {
+      background: var(--accent-color);
+      color: #000;
     }
     @media (max-width: 480px) {
       h1 {
@@ -88,22 +146,59 @@
 </head>
 <body>
   <div class="container">
-    <h1>Fantasy Sports Generator</h1>
-    <form method="post">
-      <input type="text" name="player_name" placeholder="Enter a player or name" required />
+    <div class="tabs">
+      <div class="tab active" data-sport="Football">Football</div>
+      <div class="tab" data-sport="Baseball">Baseball</div>
+      <div class="tab" data-sport="Basketball">Basketball</div>
+      <div class="tab" data-sport="Other">Other</div>
+    </div>
+
+    <div class="toggle">
+      <button id="toggleMode">Toggle Dark/Light</button>
+    </div>
+
+    <h1 id="pageTitle">Fantasy Football Name Generator</h1>
+
+    <form id="nameForm">
+      <input type="text" id="playerName" name="player_name" placeholder="Enter a player or name" required />
       <button type="submit">Generate Name</button>
     </form>
 
-    {% if team_name %}
-      <div class="result">
-        Generated Name: {{ team_name }}
-      </div>
-    {% endif %}
+    <div id="result" class="result" style="display:none;"></div>
 
     <div class="ad-banner">
       <!-- Your Ad Code Goes Here -->
       <p>Ad Banner Placeholder</p>
     </div>
   </div>
+
+  <script>
+    let selectedSport = "Football";
+
+    document.querySelectorAll(".tab").forEach(tab => {
+      tab.addEventListener("click", () => {
+        document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+        tab.classList.add("active");
+        selectedSport = tab.dataset.sport;
+        document.getElementById("pageTitle").textContent =
+          `Fantasy ${selectedSport} Name Generator`;
+      });
+    });
+
+    document.getElementById("toggleMode").addEventListener("click", () => {
+      document.body.classList.toggle("light-mode");
+    });
+
+    document.getElementById("nameForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const input = document.getElementById("playerName").value;
+      fetch(`/generate?text=${encodeURIComponent(input)}&sport=${encodeURIComponent(selectedSport)}`)
+        .then(response => response.text())
+        .then(data => {
+          document.getElementById("result").textContent = `Generated Name: ${data}`;
+          document.getElementById("result").style.display = "block";
+        });
+    });
+  </script>
 </body>
 </html>
