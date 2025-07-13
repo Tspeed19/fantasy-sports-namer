@@ -1,32 +1,109 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Fantasy Name Generator</title>
-    <style>
-        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
-        input, button { padding: 10px; font-size: 16px; }
-        .result { margin-top: 20px; font-weight: bold; font-size: 24px; color: #007BFF; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fantasy Sports Generator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(to bottom right, #1e3a8a, #10b981);
+      color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    .container {
+      background: rgba(0, 0, 0, 0.6);
+      padding: 30px 20px;
+      border-radius: 15px;
+      max-width: 420px;
+      width: 100%;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      text-align: center;
+    }
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+      color: #fbbf24;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 15px;
+      font-size: 1rem;
+      margin-bottom: 20px;
+      border: none;
+      border-radius: 8px;
+      box-sizing: border-box;
+    }
+    button {
+      width: 100%;
+      background: #fbbf24;
+      color: #000;
+      font-weight: bold;
+      padding: 14px;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #f59e0b;
+    }
+    .result {
+      margin-top: 25px;
+      font-weight: bold;
+      font-size: 1.4rem;
+      color: #34d399;
+      word-wrap: break-word;
+    }
+    .ad-banner {
+      margin-top: 40px;
+      padding: 15px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+      color: #ffffff;
+      font-size: 0.95rem;
+      opacity: 0.8;
+    }
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.5rem;
+      }
+      button {
+        font-size: 1rem;
+        padding: 12px;
+      }
+      .result {
+        font-size: 1.2rem;
+      }
+    }
+  </style>
 </head>
 <body>
-    <h1>Fantasy Sports Name Generator</h1>
+  <div class="container">
+    <h1>Fantasy Sports Generator</h1>
     <form method="post">
-        <input type="text" name="player_name" placeholder="Enter a player or name" required />
-        <button type="submit">Generate Name</button>
+      <input type="text" name="player_name" placeholder="Enter a player or name" required />
+      <button type="submit">Generate Name</button>
     </form>
 
     {% if team_name %}
-        <div class="result">
-            Generated Name: {{ team_name }}
-        </div>
+      <div class="result">
+        Generated Name: {{ team_name }}
+      </div>
     {% endif %}
 
-    <!-- Example space for ads -->
-    <div style="margin-top: 40px;">
-        <!-- Your Ad Code Goes Here -->
-        <p>Ad Banner Placeholder</p>
+    <div class="ad-banner">
+      <!-- Your Ad Code Goes Here -->
+      <p>Ad Banner Placeholder</p>
     </div>
+  </div>
 </body>
 </html>
