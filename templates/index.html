@@ -4,7 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Fantasy Sports Name Generator</title>
+
+  <!-- Google AdSense Auto Ads script -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6439905506118008"
+     crossorigin="anonymous"></script>
+
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
+
   <style>
     :root {
       --bg-color: #000000;
@@ -104,6 +110,20 @@
     .tab.active {
       background: #f59e0b;
     }
+    .spinner {
+      display: inline-block;
+      width: 24px;
+      height: 24px;
+      border: 3px solid var(--accent-color);
+      border-radius: 50%;
+      border-top-color: transparent;
+      animation: spin 0.8s linear infinite;
+      vertical-align: middle;
+      margin-right: 10px;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
     @media (max-width: 480px) {
       h1 {
         font-size: 1.5rem;
@@ -134,10 +154,15 @@
       <button type="submit">Generate Name</button>
     </form>
 
-    <div id="result" class="result" style="display:none;"></div>
+    <div id="result" class="result" style="display:none;">
+      <span id="loadingSpinner" style="display:none;">
+        <span class="spinner"></span>
+        Generating your hilarious team name...
+      </span>
+      <span id="generatedName"></span>
+    </div>
 
     <div class="ad-banner">
-      <!-- Your Ad Code Goes Here -->
       <p>Ad Banner Placeholder</p>
     </div>
   </div>
@@ -151,7 +176,7 @@
         tab.classList.add("active");
         selectedSport = tab.dataset.sport;
 
-        // Title logic:
+        // Adjust page title
         if (selectedSport === "Other") {
           document.getElementById("pageTitle").textContent =
             "Fantasy Sports Name Generator";
@@ -165,11 +190,16 @@
     document.getElementById("nameForm").addEventListener("submit", function(e) {
       e.preventDefault();
       const input = document.getElementById("playerName").value;
+
+      document.getElementById("loadingSpinner").style.display = "inline-block";
+      document.getElementById("generatedName").textContent = "";
+      document.getElementById("result").style.display = "block";
+
       fetch(`/generate?text=${encodeURIComponent(input)}&sport=${encodeURIComponent(selectedSport)}`)
         .then(response => response.text())
         .then(data => {
-          document.getElementById("result").textContent = `Generated Name: ${data}`;
-          document.getElementById("result").style.display = "block";
+          document.getElementById("loadingSpinner").style.display = "none";
+          document.getElementById("generatedName").textContent = `Generated Name: ${data}`;
         });
     });
   </script>
